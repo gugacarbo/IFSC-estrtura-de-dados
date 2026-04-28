@@ -1,0 +1,33 @@
+{
+	"name": "ifsc-estrutura-de-dados",
+	"private": false,
+	"license": "MIT",
+	"type": "module",
+	"packageManager": "pnpm@10.33.2",
+	"author": {
+		"url": "https://github.com/gugacarbo"
+	},
+	"scripts": {
+		"dev": "turbo run dev --ui=tui",
+		"test": "turbo run test",
+		"build": "turbo run build",
+		"lint": "turbo run lint",
+		"format": "biome check --write",
+		"typecheck": "turbo run typecheck",
+		"format:all": "biome check --write",
+		"format:md": "npx prettier --write \"**/*.md\"",
+		"lint-staged": "lint-staged",
+		"prepare": "husky",
+		"knip": "knip"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.4.13",
+		"@types/node": "^25.6.0",
+		"husky": "^9.1.7",
+		"knip": "^6.7.0",
+		"lint-staged": "^16.4.0",
+		"test-staged": "^1.1.11",
+		"turbo": "^2.9.6",
+		"typescript": "^6.0.3"
+	}
+}
