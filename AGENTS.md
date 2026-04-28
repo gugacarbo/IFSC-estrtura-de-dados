@@ -1,20 +1,21 @@
 # PROJECT KNOWLEDGE BASE
 
 **Generated:** 2026-04-28
-**Commit:** f1a48dd
+**Commit:** b0953dc
 **Branch:** main
 
 ## OVERVIEW
 
-pnpm monorepo scaffold for "IFSC-estrutura-de-dados" (data structures course project). Uses Biome for linting, Turbo for build orchestration, Husky + lint-staged for git hooks. `apps/` and `packages/` are empty — project is in early scaffold phase.
+pnpm monorepo for "IFSC-estrutura-de-dados" (data structures course). Biome linting, Turbo build orchestration, Husky + lint-staged git hooks. `apps/` contains Java course projects; `packages/` empty scaffold.
 
 ## STRUCTURE
 
 ```
 ifsc-estrutura-de-dados/
-├── .agents/skills/skill-creator/   # Skill creation toolkit (Python + MD)
-├── apps/                           # (empty) — intended app workspace
+├── apps/
+│   └── estrutura_de_dados-TR2/    # Java: HashTable licensing system (course TR2)
 ├── packages/                        # (empty) — intended package workspace
+├── .agents/skills/                 # Skill system (skill-creator toolkit)
 ├── .husky/                         # Git hooks (husky)
 ├── biome.json                       # Biome: tabs, double quotes JS
 ├── turbo.json                       # Turbo pipeline: build, dev, lint, test, typecheck
@@ -23,36 +24,20 @@ ifsc-estrutura-de-dados/
 
 ## WHERE TO LOOK
 
-| Task                    | Location                                    | Notes                                               |
-| ----------------------- | ------------------------------------------- | --------------------------------------------------- |
-| Skill creation workflow | `.agents/skills/skill-creator/SKILL.md`     | Full skill lifecycle                                |
-| Skill eval scripts      | `.agents/skills/skill-creator/scripts/`     | Python: run_eval, run_loop, aggregate_benchmark     |
-| Skill eval viewer       | `.agents/skills/skill-creator/eval-viewer/` | generate_review.py + viewer.html                    |
+| Task | Location | Notes |
+| ---- | -------- | ----- |
 | Lint config             | `biome.json`                                | Tabs, double-quote JS, organizeImports on           |
 | Build pipeline          | `turbo.json`                                | build depends on ^build; dev is persistent/no-cache |
 | Git hooks               | `.husky/` + `.lintstagedrc.js`              | Biome check on \*.{ts,tsx,js,jsx}                   |
-
-## CODE MAP
-
-| Symbol                | Type          | Location                                                      | Role                                |
-| --------------------- | ------------- | ------------------------------------------------------------- | ----------------------------------- |
-| `run_loop`            | Python module | `.agents/skills/skill-creator/scripts/run_loop.py`            | Skill description optimization loop |
-| `run_eval`            | Python module | `.agents/skills/skill-creator/scripts/run_eval.py`            | Run skill evaluations               |
-| `aggregate_benchmark` | Python module | `.agents/skills/skill-creator/scripts/aggregate_benchmark.py` | Aggregate eval results              |
-| `generate_review`     | Python module | `.agents/skills/skill-creator/eval-viewer/generate_review.py` | Launch eval viewer                  |
-| `package_skill`       | Python module | `.agents/skills/skill-creator/scripts/package_skill.py`       | Package skill into .skill file      |
-| `improve_description` | Python module | `.agents/skills/skill-creator/scripts/improve_description.py` | Optimize skill description          |
-| `quick_validate`      | Python module | `.agents/skills/skill-creator/scripts/quick_validate.py`      | Quick skill validation              |
-| `grader`              | MD agent spec | `.agents/skills/skill-creator/agents/grader.md`               | Eval assertion grader               |
-| `comparator`          | MD agent spec | `.agents/skills/skill-creator/agents/comparator.md`           | Blind A/B comparison                |
-| `analyzer`            | MD agent spec | `.agents/skills/skill-creator/agents/analyzer.md`             | Benchmark analysis                  |
+| Java course projects    | `apps/`                                     | HashTable, Node, Main per assignment                |
+| Skill creator toolkit   | `.agents/skills/skill-creator/`             | Python scripts, SKILL.md, eval-viewer               |
 
 ## CONVENTIONS
 
 - **Indentation**: Tabs (Biome config — deviation from JS default of 2 spaces)
 - **JS quotes**: Double quotes (Biome `javascript.formatter.quoteStyle: "double"`)
 - **Module system**: ESM (`"type": "module"` in root package.json)
-- **Package manager**: pnpm 9.0.0 (via `packageManager` field)
+- **Package manager**: pnpm 10.33.2 (via `packageManager` field)
 - **Lint-staged**: Runs `biome check --write` on staged JS/TS files only
 
 ## ANTI-PATTERNS (THIS PROJECT)
@@ -82,7 +67,7 @@ pnpm lint:staged      # Run lint-staged manually
 
 ## NOTES
 
-- `apps/` and `packages/` are empty — project is scaffold-only, no implementation yet
+- `apps/` contains Java course projects (currently `estrutura_de_dados-TR2`)
 - Turbo pipeline caches builds; `dev` explicitly sets `"cache": false`
 - `.lintstagedrc.js` uses ESM export default (not CJS module.exports)
 - `.agents/skills/skill-creator/SKILL.md` is 485 lines — use progressive disclosure, check `references/` for schemas

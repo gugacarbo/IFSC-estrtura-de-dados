@@ -1,0 +1,9 @@
+{
+    "name": "estrutura_de_dados-tr2",
+    "version": "1.0.0",
+    "scripts": {
+        "build": "javac src/HashTable.java src/Node.java src/Main.java",
+        "dev": "cd src && java Main",
+        "clean": "del *.class"
+    }
+}
