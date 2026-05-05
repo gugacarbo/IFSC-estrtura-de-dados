@@ -1,6 +1,6 @@
 {
 	"files.readonlyInclude": {
-		".husky/**": true,
+		".husky/**": true
 		// ".vscode/**": true
 	},
 	"[javascript]": {

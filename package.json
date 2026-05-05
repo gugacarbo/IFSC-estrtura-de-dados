@@ -3,23 +3,23 @@
 	"private": true,
 	"license": "MIT",
 	"type": "module",
-	"packageManager": "npm@10.9.2",
+	"packageManager": "^npm@10.9.2",
 	"workspaces": [
-		"apps/*",
-		"packages/*"
+		"launcher",
+		"apps/*"
 	],
 	"author": {
 		"name": "Gustavo Carbonera",
 		"url": "https://github.com/gugacarbo"
 	},
 	"scripts": {
-		"dev": "turbo run dev --ui=tui",
+		"start": "npm run start --workspace=tui-launcher",
 		"test": "turbo run test",
-		"build": "turbo run build",
 		"lint": "turbo run lint",
-		"format": "biome check --write",
+		"build": "turbo run build",
 		"typecheck": "turbo run typecheck",
-		"format:all": "biome check --write",
+		"format:packages": "turbo run format",
+		"format": "biome check --write",
 		"format:md": "npx prettier --write \"**/*.md\"",
 		"lint-staged": "lint-staged",
 		"prepare": "husky",

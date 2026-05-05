@@ -1,6 +1,9 @@
 # IFSC Estrutura de Dados
 
-Monorepo para entregas de Trabalhos (TRs) da disciplina de Estrutura de Dados do **IFSC (Instituto Federal de Santa Catarina)**.
+- [TR1 - Playlist](apps/tr1-playlist/README.md)
+- [TR2 - Tabela Hash](apps/tr2-hash-table/README.md)
+- [Launcher TUI](launcher/)
+
 
 ## Pré-requisitos
 
@@ -48,10 +51,16 @@ Para compilar e executar todos os trabalhos de uma vez:
 npx turbo run dev
 ```
 
-## Documentação Completa
+## Launcher
+
+O launcher TUI do monorepo está em `launcher/`.
+
+```bash
+npm run start
+```
+
+## Documentação
 
 - [Guia do Monorepo](docs/monorepo-guide.md) (estrutura, dicas, detalhes técnicos)
 - [Referência de Comandos](docs/commands-reference.md)
 - [Solução de Problemas](docs/troubleshooting.md)
-- [Instruções TR1 - Playlist](apps/tr1-playlist/README.md)
-- [Instruções TR2 - Tabela Hash](apps/tr2-hash-table/README.md)

@@ -1,0 +1,27 @@
+{
+	"name": "tui-launcher",
+	"version": "1.0.0",
+	"type": "commonjs",
+	"scripts": {
+		"dev": "tsx src/index.tsx",
+		"build": "tsc",
+		"start": "node dist/src/index.js",
+		"build:bundle": "esbuild src/index.tsx --bundle --platform=node --target=node18 --format=cjs --minify --outfile=dist/pkg-entry.cjs",
+		"build:exe": "pkg dist/pkg-entry.cjs --targets node18-win-x64 --compress Brotli --output dist/tui-launcher.exe",
+		"compress:exe": "powershell -NoProfile -Command \"if (Get-Command upx -ErrorAction SilentlyContinue) { upx --best --lzma dist/tui-launcher.exe } else { Write-Host 'UPX nao encontrado no PATH. Instale UPX para comprimir o exe.'; exit 1 }\"",
+		"exe": "npm run build && npm run build:bundle && npm run build:exe && npm run compress:exe"
+	},
+	"dependencies": {
+		"ink": "^3.2.0",
+		"react": "^17.0.2"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.4.14",
+		"@types/node": "^20.0.0",
+		"@types/react": "^17.0.89",
+		"esbuild": "^0.28.0",
+		"pkg": "^5.8.1",
+		"tsx": "^4.7.0",
+		"typescript": "^5.0.0"
+	}
+}

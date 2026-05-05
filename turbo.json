@@ -6,9 +6,9 @@
 				"^build"
 			],
 			"outputs": [
-				"dist/**",
-				".next/**",
 				"build/**",
+				"dist/**",
+				".out/**",
 				"*.class"
 			]
 		},
