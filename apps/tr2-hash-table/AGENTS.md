@@ -19,12 +19,12 @@ estrutura_de_dados-TR2/
 
 ## WHERE TO LOOK
 
-| Task | Location | Notes |
-|------|----------|-------|
-| Entry point | `Main.java` | Generates 1000 random IDs, runs test scenarios |
-| Hash logic | `HashTable.java` | m=72, multiplier=5, external chaining |
-| Node structure | `Node.java` | Simple POJO: id + proximo pointer |
-| Assignment spec | `REAME.md` | Portuguese, matricula-based parameters |
+| Task            | Location         | Notes                                          |
+| --------------- | ---------------- | ---------------------------------------------- |
+| Entry point     | `Main.java`      | Generates 1000 random IDs, runs test scenarios |
+| Hash logic      | `HashTable.java` | m=72, multiplier=5, external chaining          |
+| Node structure  | `Node.java`      | Simple POJO: id + proximo pointer              |
+| Assignment spec | `REAME.md`       | Portuguese, matricula-based parameters         |
 
 ## CONVENTIONS
 
@@ -43,7 +43,7 @@ estrutura_de_dados-TR2/
 
 ## NOTES
 
-- ID range: 1–6000 (based on last digit of matricula + 1) * 1000
+- ID range: 1–6000 (based on last digit of matricula + 1) \* 1000
 - Hash function: `hash(id) = (id * 5) % 72` (penultimate digit + 1 = 4+1 = 5)
 - Table size: m=72 (sum of digits % 100 + 50 = 22 + 50)
 - REAME.md has typo in filename (should be README.md)

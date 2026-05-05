@@ -31,6 +31,7 @@
 		"husky": "^9.1.7",
 		"knip": "^6.7.0",
 		"lint-staged": "^16.4.0",
+		"prettier": "^3.8.3",
 		"test-staged": "^1.1.11",
 		"turbo": "^2.9.6",
 		"typescript": "^6.0.3"

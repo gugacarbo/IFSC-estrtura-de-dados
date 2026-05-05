@@ -18,6 +18,7 @@ tr2-hash-table/
 ## Como executar
 
 ### Compilar
+
 ```bash
 npm run build
 # ou
@@ -25,6 +26,7 @@ javac src/HashTable.java src/Node.java src/Main.java
 ```
 
 ### Executar
+
 ```bash
 npm run dev
 # ou
@@ -32,6 +34,7 @@ cd src && java Main
 ```
 
 ### Limpar arquivos .class
+
 ```bash
 npm run clean
 ```

@@ -22,16 +22,19 @@ tr1-playlist/
 ## Como executar
 
 ### Compilar
+
 ```bash
 mvn compile
 ```
 
 ### Executar
+
 ```bash
 mvn exec:java -Dexec.mainClass="playlist.Main"
 ```
 
 ### Testes
+
 ```bash
 mvn test
 ```

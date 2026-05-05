@@ -1,3 +1,4 @@
 export default {
-	"*.{ts,tsx,js,jsx}": "biome check --write",
+	"*.{ts,tsx,js,jsx,json}": "biome check --write",
+	"*.md": "prettier --write",
 };
