@@ -3,6 +3,7 @@
 	"private": true,
 	"license": "MIT",
 	"type": "module",
+	"packageManager": "npm@10.9.2",
 	"workspaces": [
 		"apps/*",
 		"packages/*"
