@@ -1,0 +1,14 @@
+{
+	"name": "tr1-playlist",
+	"version": "1.0.0",
+	"private": true,
+	"scripts": {
+		"build": "mvn compile",
+		"dev": "mvn exec:java -Dexec.mainClass=playlist.Main",
+		"test": "mvn test",
+		"lint": "echo 'No lint for Java'",
+		"typecheck": "echo 'Java is compiled'",
+		"format": "echo 'No formatter for Java'",
+		"clean": "mvn clean"
+	}
+}

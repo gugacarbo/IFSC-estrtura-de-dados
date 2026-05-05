@@ -13,8 +13,6 @@ pnpm monorepo for "IFSC-estrutura-de-dados" (data structures course). Biome lint
 ```
 ifsc-estrutura-de-dados/
 ├── apps/
-│   └── estrutura_de_dados-TR2/    # Java: HashTable licensing system (course TR2)
-├── packages/                        # (empty) — intended package workspace
 ├── .agents/skills/                 # Skill system (skill-creator toolkit)
 ├── .husky/                         # Git hooks (husky)
 ├── biome.json                       # Biome: tabs, double quotes JS
@@ -29,7 +27,7 @@ ifsc-estrutura-de-dados/
 | Lint config             | `biome.json`                                | Tabs, double-quote JS, organizeImports on           |
 | Build pipeline          | `turbo.json`                                | build depends on ^build; dev is persistent/no-cache |
 | Git hooks               | `.husky/` + `.lintstagedrc.js`              | Biome check on \*.{ts,tsx,js,jsx}                   |
-| Java course projects    | `apps/`                                     | HashTable, Node, Main per assignment                |
+| Course projects    | `apps/`                                     | HashTable, Node, Main per assignment                |
 | Skill creator toolkit   | `.agents/skills/skill-creator/`             | Python scripts, SKILL.md, eval-viewer               |
 
 ## CONVENTIONS
@@ -43,7 +41,6 @@ ifsc-estrutura-de-dados/
 ## ANTI-PATTERNS (THIS PROJECT)
 
 - No `.eslintrc` / `.prettierrc` — Biome replaces both; don't add them
-- Don't use npm or yarn — pnpm is mandated via `packageManager` field
 - `apps/` and `packages/` are workspace targets — new code goes in one of these, not root
 
 ## UNIQUE STYLES
@@ -67,7 +64,6 @@ pnpm lint:staged      # Run lint-staged manually
 
 ## NOTES
 
-- `apps/` contains Java course projects (currently `estrutura_de_dados-TR2`)
+- `apps/` contains Course projects
 - Turbo pipeline caches builds; `dev` explicitly sets `"cache": false`
 - `.lintstagedrc.js` uses ESM export default (not CJS module.exports)
-- `.agents/skills/skill-creator/SKILL.md` is 485 lines — use progressive disclosure, check `references/` for schemas
