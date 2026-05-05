@@ -1,14 +1,14 @@
 {
-    "name": "tr2-hash-table",
-    "version": "1.0.0",
-    "private": true,
-    "scripts": {
-        "build": "javac src/HashTable.java src/Node.java src/Main.java",
-        "dev": "npm run build && cd src && java Main",
-        "test": "echo 'No tests configured'",
-        "lint": "echo 'No lint for Java'",
-        "typecheck": "echo 'Java is compiled'",
-        "format": "echo 'No formatter for Java'",
-        "clean": "del /s /q src\\*.class 2>nul"
-    }
+	"name": "tr2-hash-table",
+	"version": "1.0.0",
+	"private": true,
+	"scripts": {
+		"build": "javac src/HashTable.java src/Node.java src/Main.java",
+		"dev": "npm run build && cd src && java Main",
+		"test": "echo 'No tests configured'",
+		"lint": "echo 'No lint for Java'",
+		"typecheck": "echo 'Java is compiled'",
+		"format": "echo 'No formatter for Java'",
+		"clean": "del /s /q src\\*.class 2>nul"
+	}
 }

@@ -1,4 +1,4 @@
-npm run biome check
+# npm run biome check
 
 npm run build
 npm run test

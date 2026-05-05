@@ -6,10 +6,8 @@
 		"dev": "tsx src/index.tsx",
 		"build": "tsc",
 		"start": "node dist/src/index.js",
-		"build:bundle": "esbuild src/index.tsx --bundle --platform=node --target=node18 --format=cjs --minify --outfile=dist/pkg-entry.cjs",
-		"build:exe": "pkg dist/pkg-entry.cjs --targets node18-win-x64 --compress Brotli --output dist/tui-launcher.exe",
-		"compress:exe": "powershell -NoProfile -Command \"if (Get-Command upx -ErrorAction SilentlyContinue) { upx --best --lzma dist/tui-launcher.exe } else { Write-Host 'UPX nao encontrado no PATH. Instale UPX para comprimir o exe.'; exit 1 }\"",
-		"exe": "npm run build && npm run build:bundle && npm run build:exe && npm run compress:exe"
+		"format": "biome check --write",
+		"lint": "biome lint"
 	},
 	"dependencies": {
 		"ink": "^3.2.0",

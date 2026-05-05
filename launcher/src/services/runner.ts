@@ -1,13 +1,10 @@
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import type { AppInfo, ScriptOption } from "../types.js";
 
-type LogStream = "stdout" | "stderr" | "system";
-
 interface RunHooks {
 	onStatus?: (status: string) => void;
-	onLine?: (line: string, stream: LogStream) => void;
 	onPid?: (pid: number) => void;
 	onFinish?: (success: boolean, message: string) => void;
 }
@@ -15,6 +12,8 @@ interface RunHooks {
 export interface BackgroundRunHandle {
 	stop: () => void;
 }
+
+const MONITOR_INTERVAL_MS = 1200;
 
 function getLatestMtime(filePaths: string[]): number {
 	let latest = 0;
@@ -111,117 +110,87 @@ function shouldBuild(app: AppInfo): boolean {
 	return latestClass < latestJava;
 }
 
-function emitLines(
-	chunk: string,
-	stream: LogStream,
-	emit: (line: string, kind: LogStream) => void,
-	bufferRef: { value: string },
-): void {
-	bufferRef.value += chunk;
-	const lines = bufferRef.value.split(/\r?\n/);
-	bufferRef.value = lines.pop() ?? "";
+function escapePowerShellSingleQuoted(value: string): string {
+	return value.replace(/'/g, "''");
+}
 
-	for (const line of lines) {
-		if (line.length > 0) {
-			emit(line, stream);
+function sanitizeWindowTitle(value: string): string {
+	return value.replace(/[&|<>^]/g, " ").trim();
+}
+
+function isProcessAlive(pid: number): boolean {
+	try {
+		process.kill(pid, 0);
+		return true;
+	} catch (error) {
+		if (error instanceof Error && "code" in error) {
+			const code = (error as NodeJS.ErrnoException).code;
+			return code === "EPERM";
 		}
+		return false;
 	}
 }
 
-function runNpmScript(
-	app: AppInfo,
-	script: string,
-	hooks: RunHooks,
-	isStopped: () => boolean,
-	setCurrentStop: (stop: () => void) => void,
-): Promise<number> {
-	return new Promise((resolve, reject) => {
-		const child = spawn("npm", ["run", script], {
-			cwd: app.path,
-			shell: true,
-			stdio: ["ignore", "pipe", "pipe"],
-		});
+function buildCommandForOption(app: AppInfo, option: ScriptOption): string {
+	if (option.type === "script") {
+		return `npm run "${option.id}"`;
+	}
 
-		if (!child.stdout || !child.stderr) {
-			reject(new Error(`Falha ao capturar logs do script '${script}'.`));
-			return;
-		}
-
-		if (child.pid) {
-			hooks.onPid?.(child.pid);
-		}
-
-		setCurrentStop(() => {
-			if (!child.killed) {
-				child.kill();
-			}
-		});
-
-		const stdoutBuffer = { value: "" };
-		const stderrBuffer = { value: "" };
-
-		child.stdout.on("data", (data) => {
-			emitLines(
-				String(data),
-				"stdout",
-				(line, kind) => hooks.onLine?.(line, kind),
-				stdoutBuffer,
-			);
-		});
-
-		child.stderr.on("data", (data) => {
-			emitLines(
-				String(data),
-				"stderr",
-				(line, kind) => hooks.onLine?.(line, kind),
-				stderrBuffer,
-			);
-		});
-
-		child.on("error", (error) => {
-			reject(error);
-		});
-
-		child.on("close", (code) => {
-			if (stdoutBuffer.value.length > 0) {
-				hooks.onLine?.(stdoutBuffer.value, "stdout");
-			}
-			if (stderrBuffer.value.length > 0) {
-				hooks.onLine?.(stderrBuffer.value, "stderr");
-			}
-
-			if (isStopped()) {
-				resolve(0);
-				return;
-			}
-
-			resolve(code ?? 1);
-		});
-	});
-}
-
-async function runStartScript(
-	app: AppInfo,
-	hooks: RunHooks,
-	isStopped: () => boolean,
-	setCurrentStop: (stop: () => void) => void,
-): Promise<number> {
 	if (shouldBuild(app)) {
-		hooks.onStatus?.(`Build necessario para ${app.name}...`);
-		const buildCode = await runNpmScript(
-			app,
-			"build",
-			hooks,
-			isStopped,
-			setCurrentStop,
-		);
-		if (buildCode !== 0 || isStopped()) {
-			return buildCode;
-		}
+		return 'npm run "build" && npm run "dev"';
 	}
 
-	hooks.onStatus?.(`Executando ${app.name} -> dev em background...`);
-	return runNpmScript(app, "dev", hooks, isStopped, setCurrentStop);
+	return 'npm run "dev"';
+}
+
+function launchInNewCmdTerminal(app: AppInfo, option: ScriptOption): number {
+	if (process.platform !== "win32") {
+		throw new Error(
+			"Abertura de terminal externo implementada apenas para Windows.",
+		);
+	}
+
+	const scriptCommand = buildCommandForOption(app, option);
+	const windowTitle = sanitizeWindowTitle(
+		`IFSC Launcher | ${app.name} | ${option.label}`,
+	);
+	const cmdLine = `title ${windowTitle} && ${scriptCommand}`;
+
+	const psScript = [
+		`$p = Start-Process -FilePath 'cmd.exe' -ArgumentList @('/k', '${escapePowerShellSingleQuoted(cmdLine)}') -WorkingDirectory '${escapePowerShellSingleQuoted(app.path)}' -PassThru`,
+		"Write-Output $p.Id",
+	].join("; ");
+
+	const result = spawnSync("powershell", ["-NoProfile", "-Command", psScript], {
+		encoding: "utf-8",
+	});
+
+	if (result.status !== 0) {
+		const stderr = result.stderr?.trim() ?? "";
+		throw new Error(
+			stderr
+				? `Falha ao abrir terminal: ${stderr}`
+				: "Falha ao abrir terminal.",
+		);
+	}
+
+	const rawPid = (result.stdout ?? "").trim();
+	const pid = Number.parseInt(rawPid, 10);
+	if (!Number.isInteger(pid) || pid <= 0) {
+		throw new Error(
+			`Nao foi possivel obter PID do terminal. Saida: '${rawPid || "<vazio>"}'`,
+		);
+	}
+
+	return pid;
+}
+
+function stopProcessTree(pid: number): void {
+	const killer = spawn("taskkill", ["/PID", String(pid), "/T", "/F"], {
+		stdio: "ignore",
+		shell: false,
+	});
+	killer.unref();
 }
 
 export function executeScriptOptionInBackground(
@@ -229,59 +198,59 @@ export function executeScriptOptionInBackground(
 	option: ScriptOption,
 	hooks: RunHooks = {},
 ): BackgroundRunHandle {
-	let stopped = false;
-	let stopCurrent = () => {};
+	let pid: number | null = null;
+	let finished = false;
+	let stopRequested = false;
+	let monitorTimer: NodeJS.Timeout | null = null;
 
-	void (async () => {
-		try {
-			const exitCode =
-				option.type === "script"
-					? await runNpmScript(
-							app,
-							option.id,
-							hooks,
-							() => stopped,
-							(stop) => {
-								stopCurrent = stop;
-							},
-						)
-					: await runStartScript(
-							app,
-							hooks,
-							() => stopped,
-							(stop) => {
-								stopCurrent = stop;
-							},
-						);
-
-			if (stopped) {
-				hooks.onStatus?.("Processo encerrado pelo usuario.");
-				hooks.onFinish?.(false, "Processo encerrado pelo usuario.");
-				return;
-			}
-
-			if (exitCode === 0) {
-				hooks.onStatus?.("Execucao concluida.");
-				hooks.onFinish?.(true, "Execucao concluida.");
-				return;
-			}
-
-			const message = `Script '${option.id}' falhou para ${app.name} (codigo ${exitCode}).`;
-			hooks.onStatus?.(message);
-			hooks.onFinish?.(false, message);
-		} catch (error) {
-			const message =
-				error instanceof Error ? error.message : "Falha ao executar script.";
-			hooks.onStatus?.(message);
-			hooks.onFinish?.(false, message);
+	const finish = (success: boolean, message: string): void => {
+		if (finished) {
+			return;
 		}
-	})();
+		finished = true;
+		if (monitorTimer) {
+			clearInterval(monitorTimer);
+			monitorTimer = null;
+		}
+		hooks.onStatus?.(message);
+		hooks.onFinish?.(success, message);
+	};
+
+	try {
+		hooks.onStatus?.(
+			`Abrindo novo terminal para ${app.name} -> ${option.label}...`,
+		);
+		pid = launchInNewCmdTerminal(app, option);
+		hooks.onPid?.(pid);
+		hooks.onStatus?.(`Terminal aberto (PID ${pid}).`);
+
+		monitorTimer = setInterval(() => {
+			if (!pid || finished) {
+				return;
+			}
+
+			if (!isProcessAlive(pid)) {
+				if (stopRequested) {
+					finish(true, "Terminal encerrado pelo launcher.");
+					return;
+				}
+				finish(true, "Terminal foi fechado.");
+			}
+		}, MONITOR_INTERVAL_MS);
+	} catch (error) {
+		const message =
+			error instanceof Error ? error.message : "Falha ao iniciar execucao.";
+		finish(false, message);
+	}
 
 	return {
 		stop: () => {
-			stopped = true;
-			hooks.onStatus?.("Solicitando encerramento do processo...");
-			stopCurrent();
+			if (finished || !pid) {
+				return;
+			}
+			stopRequested = true;
+			hooks.onStatus?.(`Encerrando terminal (PID ${pid})...`);
+			stopProcessTree(pid);
 		},
 	};
 }
