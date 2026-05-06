@@ -1,5 +1,5 @@
 # Download checkstyle JAR if not present
-$version = "10.20.0"
+$version = "13.4.2"
 $jarName = "checkstyle-$version-all.jar"
 $jarPath = "$PSScriptRoot\checkstyle.jar"
 $url = "https://github.com/checkstyle/checkstyle/releases/download/checkstyle-$version/$jarName"
