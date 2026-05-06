@@ -9,7 +9,7 @@
 		"test": "echo 'Testes JUnit requerem configuracao manual (sem Maven)'",
 		"lint": "javac -Xlint src/main/java/playlist/*.java",
 		"typecheck": "javac -Xlint src/main/java/playlist/*.java",
-		"format": "npm rum format:java src/main/java/playlist/*.java",
+		"format": "npm run format:java src/main/java/playlist/*.java",
 		"clean": "del /s /q src\\main\\java\\playlist\\*.class 2>nul"
 	}
 }
