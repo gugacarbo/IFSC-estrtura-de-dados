@@ -7,9 +7,9 @@
 		"build": "javac src/HashTable.java src/Node.java src/Main.java",
 		"dev": "npm run build && cd src && java Main",
 		"test": "echo 'No tests configured'",
-		"lint": "echo 'No lint for Java'",
-		"typecheck": "echo 'Java is compiled'",
-		"format": "echo 'No formatter for Java'",
+		"lint": "javac -Xlint src/*.java",
+		"typecheck": "javac -Xlint src/*.java",
+		"format": "node ../../tools/java/checkstyle-runner.cjs src/*.java",
 		"clean": "del /s /q src\\*.class 2>nul"
 	}
 }

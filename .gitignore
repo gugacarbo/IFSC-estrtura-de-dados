@@ -144,3 +144,6 @@ vite.config.ts.timestamp-*
 
 # Turbo
 .turbo/cache
+
+# Java tools
+tools/java/*.jar

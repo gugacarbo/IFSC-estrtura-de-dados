@@ -7,9 +7,9 @@
 		"build": "javac src/main/java/playlist/*.java",
 		"dev": "npm run build && java -cp src/main/java playlist.Main",
 		"test": "echo 'Testes JUnit requerem configuracao manual (sem Maven)'",
-		"lint": "echo 'No lint for Java'",
-		"typecheck": "echo 'Java is compiled'",
-		"format": "echo 'No formatter for Java'",
+		"lint": "javac -Xlint src/main/java/playlist/*.java",
+		"typecheck": "javac -Xlint src/main/java/playlist/*.java",
+		"format": "npm rum format:java src/main/java/playlist/*.java",
 		"clean": "del /s /q src\\main\\java\\playlist\\*.class 2>nul"
 	}
 }
