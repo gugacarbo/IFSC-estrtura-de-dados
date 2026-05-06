@@ -1,5 +1,6 @@
 {
 	"name": "tr2-hash-table",
+	"description": "Hash Table",
 	"version": "1.0.0",
 	"private": true,
 	"scripts": {

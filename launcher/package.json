@@ -1,7 +1,7 @@
 {
-	"name": "tui-launcher",
+	"name": "launcher",
 	"version": "1.0.0",
-	"type": "commonjs",
+	"type": "module",
 	"scripts": {
 		"dev": "tsx src/index.tsx",
 		"build": "tsc",
@@ -10,16 +10,18 @@
 		"lint": "biome lint"
 	},
 	"dependencies": {
-		"ink": "^3.2.0",
-		"react": "^17.0.2"
+		"ink": "^7.0.2",
+		"react": "^19.2.5"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.4.14",
-		"@types/node": "^20.0.0",
-		"@types/react": "^17.0.89",
+		"@types/node": "^25.6.0",
+		"@types/react": "^19.2.14",
+		"boxednode": "^3.0.0",
 		"esbuild": "^0.28.0",
+		"nexe": "^5.0.0-beta.4",
 		"pkg": "^5.8.1",
-		"tsx": "^4.7.0",
-		"typescript": "^5.0.0"
+		"tsx": "^4.21.0",
+		"typescript": "^6.0.3"
 	}
 }

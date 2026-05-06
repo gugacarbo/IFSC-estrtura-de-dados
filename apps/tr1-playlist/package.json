@@ -1,5 +1,6 @@
 {
 	"name": "tr1-playlist",
+	"description": "Java Playlist com listas encadeadas",
 	"version": "1.0.0",
 	"private": true,
 	"scripts": {

@@ -4,7 +4,6 @@
 - [TR2 - Tabela Hash](apps/tr2-hash-table/README.md)
 - [Launcher TUI](launcher/)
 
-
 ## Pré-requisitos
 
 - Node.js (v18 ou superior) — para uso do npm e Turbo
